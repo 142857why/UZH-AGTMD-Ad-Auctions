@@ -3,7 +3,7 @@
 #############################################
 
 #Log-level: default or debug (gives more information)
-loglevel default
+loglevel debug
 
 #The auction mechanism: gsp, vcg or switch
 mechanism gsp
@@ -27,7 +27,7 @@ minval 30
 maxval 180
 
 #How many permutations of the per click values to use [maximum is factorial(numBidders)]
-maxperms 120
+maxperms 1
 
 #The number of iterations (how many times to repeat an auction with different values)
 numiters 1

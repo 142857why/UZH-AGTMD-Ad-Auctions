@@ -441,9 +441,10 @@ public class AuctionSimulator {
 		totalSpent = new ArrayList<Integer>();
 		
 		final int numBidders = agentNames.size();
-
+//		System.out.println("Number of bidders bidders= " + numBidders);
 		//number of permutations
 		int numPerms = (int) Math.min(maxPerms,Util.factorial(numBidders));
+//		System.out.println("Number of permutations = " + numPerms);
 
 		//initialize revenue and utility
 		totalRevenue = new ArrayList<Integer>();
@@ -454,7 +455,7 @@ public class AuctionSimulator {
 			if(logLevel == DEBUG){
 				System.out.println();
 				System.out.println("========================================");
-				System.out.println("Iteration "+i);
+				System.out.println("Iteration " + i);
 				System.out.println("========================================");
 				System.out.println();
 			}
