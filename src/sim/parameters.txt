@@ -3,10 +3,10 @@
 #############################################
 
 #Log-level: default or debug (gives more information)
-loglevel debug
+loglevel default
 
 #The auction mechanism: gsp, vcg or switch
-mechanism gsp
+mechanism switch
 
 #Number of rounds
 numrounds 48
@@ -30,11 +30,14 @@ maxval 180
 maxperms 1
 
 #The number of iterations (how many times to repeat an auction with different values)
-numiters 1
+numiters 50
 
 #The seed used to initialize the pseudo-random number generator (use this to get reproducible per click valuations)
-#seed 2
+seed 2
 
 #The list of bidding agents (the exact class names followed by the number of how many times it should be instantiated)
 #e.g. agents TruthfulAgent 3 BBAgentGroupName 2
-agents TruthfulAgent 5
+#agents TruthfulAgent 5
+agents BBAgentRZHOU 5
+#agents TruthfulAgent 4 BBAgentRZHOU 1
+#agents TruthfulAgent 1 BBAgentRZHOU 4
