@@ -22,7 +22,7 @@ public class BBAgentRZHOU extends Agent{
 	public int bid(int t, History history, int reserve) {
 		ArrayList<Integer> targetInfo = targetSlot(t, history, reserve);
 		
-		int targetSlot = targetInfo.get(0);
+		int targetSlot = targetInfo.get(0); // targetSlot = i*
 		int bid = 0;
 		
 		/*TODO compute the bid according to the balanced bidding strategy:
@@ -32,8 +32,31 @@ public class BBAgentRZHOU extends Agent{
 		 * hint 1: use history.getSlotClicks(t-1)
 		 * hint 2: as described in the assignment, clicks_(targetSlot-1) = 2*clicks_(target_slot) if targetSlot == 0
 		 */
-		
-		return bid;
+		ArrayList<Integer> lastTimeNumClicks = history.getSlotClicks(t - 1); //q_k
+		int numSlots = lastTimeNumClicks.size();
+		// p_i* payment to (perhaps Google) to get position i*
+		// q_i* the quality on position i*， = c(i*, t-1)
+		// w_i : value
+		// b_i : bid (that's what we return)
+		int q_i_star = lastTimeNumClicks.get(targetSlot);
+		int q_i_star_minus1 = (targetSlot == 0) ? 2 * q_i_star : lastTimeNumClicks.get(targetSlot - 1);
+		ArrayList<Pair> bids = slotInfo(t, history, reserve);
+//		ArrayList<Integer> payment = GSP.computePayments(numSlots, bids, reserve);
+		int w_i = this.getValue();
+		int p_i_star = bids.get(targetSlot).getFirst();
+		double exactBid = (double)w_i - (q_i_star * (w_i - p_i_star) / (double)q_i_star_minus1);
+		bid = (int) Math.floor(exactBid);
+
+//		bid = this.getValue() - q_i_star * (this.getValue() - bids.get(targetSlot).getFirst()) / q_i_star_minus1;
+		// ONLY FOR DEBUG
+//		System.out.println("Let's print" + this.getId() + " at time t-1");
+//		for (Integer i : lastTimeNumClicks) {
+//			System.out.print(i + " ");
+//		}
+//		System.out.println();
+
+		// DEBUG ends
+		return Math.min(bid, this.getValue());
 	}
 	
 	/**
@@ -45,19 +68,31 @@ public class BBAgentRZHOU extends Agent{
 	 * @param reserve, the reserve price
 	 * @return list of Pairs (minBid,maxBid)_i for all slots i
 	 */
+
 	public ArrayList<Pair> slotInfo(int t, History history, int reserve){
 		ArrayList<Pair> info = new ArrayList<Pair>();
 		
 		//get bids from last round
 		ArrayList<Integer> lastBids = (ArrayList<Integer>)history.getBids(t-1).clone();
-		lastBids.remove(getId());
 
+		lastBids.remove(getId());
+		// lastBids : 其他bidder上一时刻的bid
 
 		//get clicks from last rounds
 		int numSlots = history.getSlotClicks(t-1).size();
-		for (int slot = 0; slot<numSlots; slot++){
+
+		for (int slot = 0; slot < numSlots; slot++){
 			info.add(GSP.bidRangeForSlot(slot, reserve, lastBids));
 		}
+
+//		System.out.println("printing " + this.getId() + "'s slot info");
+//		//ONLY FOR DEBUG
+//
+//		for (int i = 0; i < info.size(); ++i) {
+//			System.out.println(info.get(i).getFirst() + "  " +  info.get(i).getSecond());
+//		}
+//		System.out.println();
+//		//DEBUG ENDS
 		return info;
 	}
 	
@@ -77,7 +112,14 @@ public class BBAgentRZHOU extends Agent{
 		 * 
 		 * hint: use history.getSlotClicks(t-1), and slotInfo(t, history, reserve)
 		 */
-		
+		ArrayList<Integer> q = history.getSlotClicks(t-1);
+		int numSlots = q.size();
+		ArrayList<Pair> bids = slotInfo(t, history, reserve);
+//		ArrayList<Integer> payment = GSP.computePayments(numSlots, bids, reserve);
+
+		for (int k = 0; k < numSlots; ++k) {
+			expectedUtils.add(q.get(k) * (this.getValue() - bids.get(k).getFirst()));
+		}
 
 		return expectedUtils;
 	}
