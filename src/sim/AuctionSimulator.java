@@ -86,23 +86,23 @@ public class AuctionSimulator {
 
 
 		//number of slots = number of active bidders -1
-		int numSlots = Math.max(activeBidders - 1,1);
+		int numSlots = Math.max(activeBidders - 1, 1);
 
 		//compute slot clicks
 		ArrayList<Integer> slotClicks = new ArrayList<Integer>();
-		for (int i = 0; i<numSlots; i++){
+		for (int i = 0; i < numSlots; i++) {
 			slotClicks.add( (int) (clicksOfTopSlot * Math.pow(dropOff, i) ));
 		}
 
 		//compute allocation of mechanism: (occupant, per click payment) for (slot1, slot2, ...)
 		ArrayList<ArrayList<Integer>> allocation = null;
-		if (mechanism.equals("gsp")){
+		if (mechanism.equals("gsp")) {
 			allocation = GSP.computeOutcome(slotClicks,currentBids,reserve);
 		}
-		else if (mechanism.equals("vcg")){
+		else if (mechanism.equals("vcg")) {
 			allocation = VCG.computeOutcome(slotClicks,currentBids,reserve);
 		}
-		else if (mechanism.equals("switch")){
+		else if (mechanism.equals("switch")) {
 			if (t < numRounds/2){
 				allocation = GSP.computeOutcome(slotClicks,currentBids,reserve);
 			}
