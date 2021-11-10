@@ -97,13 +97,23 @@ public class VCG {
 		firstUnallocatedBid = numValid > numSlots ? bids.get(numSlots).getSecond() : reserve;
 		
 		int alloc = Math.min(numValid, numSlots);
-		for (int i = 0; i<alloc; i++){
+		for (int i = 0; i < alloc; i++){
 			int totalPayment = 0;
 			/*TODO implement the vcg payment rule, i.e. you need to implement equation (9.13) from the lectures notes
 			 * (i.e. totalPayment = t_{vcg,i}(b))
 			 */
-			
+
+			// (pos(k-1) - pos(k)) Qk * bk
+			for (int k = i + 1; k < alloc + 1; ++k) {
+				int b_k = (k == alloc) ?  firstUnallocatedBid : bids.get(k).getSecond();
+				int pos_k_minus_1 = slotClicks.get(k-1);
+				int pos_k = (k == alloc) ? 0 : slotClicks.get(k);
+
+				totalPayment += (pos_k_minus_1 - pos_k) * b_k;
+			}
+
 			perClickPayments.add((int)Math.round(totalPayment/(double)slotClicks.get(i)));
+
 		}
 		return perClickPayments;
 	}
