@@ -76,7 +76,6 @@ public class BBAgentRZHOU extends Agent{
 		ArrayList<Integer> lastBids = (ArrayList<Integer>)history.getBids(t-1).clone();
 
 		lastBids.remove(getId());
-		// lastBids : 其他bidder上一时刻的bid
 
 		//get clicks from last rounds
 		int numSlots = history.getSlotClicks(t-1).size();
